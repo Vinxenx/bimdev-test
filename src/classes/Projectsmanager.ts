@@ -101,14 +101,18 @@ export class ProjectsManager {
     
     const reader = new FileReader();
     reader.addEventListener("load", () => {
-        const json = reader.result;
+      const json = reader.result;
+        console.log("1. Gelesene JSON:", json); // Prüfen was gelesen wurde
         
         if (!json) { return; }
         const projects: IProject[] = JSON.parse(json as string);
+        console.log("2. Geparste Projekte:", projects); // Prüfen was geparst wurde
         
         for (const project of projects) {
             try {
+                console.log("3. Aktuelles Projekt vor newProject:", project); // Prüfen des einzelnen Projekts
                 const newProject = this.newProject(project);
+                console.log("4. Erstelltes Projekt:", newProject); // Prüfen was erstellt wurde
             } catch (error) {
                 console.error("5. Fehler beim Erstellen:", error); // Fehler loggen
             }
