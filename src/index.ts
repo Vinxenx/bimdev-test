@@ -31,6 +31,19 @@ if (newProjectBtn)  {
   console.warn("New projects button was not found")
 }
 
+const editBtn = document.getElementById("edit-btn")
+
+if (editBtn)  {
+  
+  editBtn?.addEventListener("click", () => showModal("new-project-modal"))
+} else {
+  console.warn("New edit button was not found")
+}
+
+
+
+
+
 const projectForm = document.getElementById("new-project-form")
 if (projectForm && projectForm instanceof HTMLFormElement) {
   projectForm.addEventListener("submit", (e) => {

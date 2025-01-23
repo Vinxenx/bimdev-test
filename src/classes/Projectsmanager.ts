@@ -23,7 +23,7 @@ export class ProjectsManager {
     if (nameInUse) {
       throw new Error(`A project with the name "${data.name}" already exists`)
     }
-    const project = new Project(data)
+    const project = new Project(data) 
 
     project.ui.addEventListener("click", () => {
       const projectsPage = document.getElementById("projects-page")

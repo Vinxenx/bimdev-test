@@ -28,16 +28,12 @@ export class Project implements IProject {
 
   constructor(data: IProject) {
     this.id = uuidv4()
-    //Project data definition
     for (const key in data) {
-      if (key === "ui") {
-        continue
-      }
-      this[key] = data[key]
+        if (key === "ui") continue;  // Ignoriere UI-Property
+        if (key in this) this[key] = data[key]  // Prüfe ob Property existiert
     }
-    
     this.setUI()
-  }
+}
     //Erstellung einer UI für ein Projekt card
   setUI() {
     if (this.ui && this.ui instanceof HTMLDivElement) {return}
