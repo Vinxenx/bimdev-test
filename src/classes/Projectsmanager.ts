@@ -14,25 +14,50 @@ export class ProjectsManager {
       finishDate: new Date()
     })
   }
+  private validateProjectName(name: string) {
+    if (name.length < 5) {
+        throw new Error("Project name must be at least 5 characters long")
+    }
+ }
+ 
+ private validateNameInUse(name: string) {
+    const projectNames = this.list.map(project => project.name)
+    if (projectNames.includes(name)) {
+        throw new Error(`A project with the name "${name}" already exists`)
+    }
+ }
+ 
+ private validateFinishDate(date: Date) {
+    if (!date || date.toString() === "Invalid Date") {
+        return new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    }
+    return date
+ }
 
   newProject(data: IProject) {
-    const projectNames = this.list.map((project) => {
-      return project.name
-    })
-    const nameInUse = projectNames.includes(data.name)
-    if (nameInUse) {
-      throw new Error(`A project with the name "${data.name}" already exists`)
-    }
+   
+    this.validateProjectName(data.name)
+    this.validateNameInUse(data.name)
+    data.finishDate = this.validateFinishDate(data.finishDate)
+    
     const project = new Project(data)
 
     project.ui.addEventListener("click", () => {
+      console.log("Project clicked:", project.id); // Log project ID
       const projectsPage = document.getElementById("projects-page")
       const detailsPage = document.getElementById("project-details")
-      if(!projectsPage || !detailsPage) {return}                        //Wenn dort keine projects-page oder keine details-page ist, stoppe die Funktion
-      projectsPage.style.display = "none"                               //Manipulation der HTML mit Hilfe des style-Operators
+      console.log("Details page found:", detailsPage); // Log details page element
+      
+      if(!projectsPage || !detailsPage) return //Wenn dort keine projects-page oder keine details-page ist, stoppe die Funktion
+      
+      
+      detailsPage.setAttribute("data-project-id", project.id)
+      console.log("Set project ID:", project.id); // Log setting ID
+      
+      projectsPage.style.display = "none" //Manipulation der HTML mit Hilfe des style-Operators
       detailsPage.style.display = "flex"
       this.setDetailsPage(project)
-    })
+  })
 
 
     this.ui.append(project.ui)
@@ -43,6 +68,8 @@ export class ProjectsManager {
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details")
     if (!detailsPage) { return }
+
+    detailsPage.setAttribute("data-project-id", project.id)
 
     // Für alle verfügbaren Projekt-Keys
     for (const key in project) {
@@ -73,6 +100,39 @@ export class ProjectsManager {
     return project
   }
   
+  updateProject(id: string, updatedData: Partial<IProject>) {
+    console.log("Projekt wird geupdatet")
+    const project = this.getProject(id);
+    console.log("Gefundenes Projekt:", project)
+    if (!project) return;
+    
+    if (updatedData.name && updatedData.name !== project.name) {
+        this.validateProjectName(updatedData.name);
+        this.validateNameInUse(updatedData.name);
+    }
+    
+    if (updatedData.finishDate) {
+        updatedData.finishDate = this.validateFinishDate(updatedData.finishDate);
+    }
+    
+    // Update project properties
+    for (const key in updatedData) {
+        if (key in project && key !== "id") {
+            project[key] = updatedData[key];
+        }
+    }
+    
+    // Update UI
+    project.setUI();
+    
+    // Update details page if we're on it
+    const detailsPage = document.getElementById("project-details")
+    if (detailsPage && detailsPage.getAttribute("data-project-id") === id) {
+        this.setDetailsPage(project)
+    }
+
+    return project
+}
   deleteProject(id: string) {
     const project = this.getProject(id)
     if (!project) { return }

@@ -28,6 +28,7 @@ export class Project implements IProject {
 
   constructor(data: IProject) {
     this.id = uuidv4()
+    
     //Project data definition
     for (const key in data) {
       if (key === "ui") {
@@ -43,9 +44,10 @@ export class Project implements IProject {
     if (this.ui && this.ui instanceof HTMLDivElement) {return}
     this.ui = document.createElement("div")
     this.ui.className = "project-card"
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`
     this.ui.innerHTML = `
     <div class="card-header">
-      <p style="background-color: #ca8134; padding: 10px; border-radius: 8px; aspect-ratio: 1;">HC</p>
+      <p id="projectnameshortage" style="font-size: 20px; background-color:${randomColor}; aspect-ratio: 1; border-radius: 100%; padding: 12px;">${this.name.slice(0, 2)}</p
       <div>
         <h5>${this.name}</h5>
         <p>${this.description}</p>
