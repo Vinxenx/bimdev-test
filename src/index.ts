@@ -34,9 +34,7 @@ if (newProjectBtn)  {
 const editBtn = document.getElementById("edit-btn")
 if (editBtn) {
   editBtn.addEventListener("click", () => {
-    console.log("Edit button clicked"); // Debug 1
     const detailsPage = document.getElementById("project-details")
-    console.log("Details page:", detailsPage); // Debug 2
     const projectId = detailsPage?.getAttribute("data-project-id")
     console.log("Project ID:", projectId); // Debug 3
     if (!projectId) {
@@ -125,13 +123,9 @@ if(projectButton) {
 }
 function handleProjectModal(mode: 'new' | 'edit', projectId?: string) {
   console.log('handleProjectModal aufgerufen mit:', { mode, projectId })
-  
   const modal = document.getElementById("new-project-modal") as HTMLDialogElement
-  console.log('Modal-Element gefunden:', modal)
   
-  const form = modal?.querySelector("form") as HTMLFormElement
-  console.log('Formular-Element gefunden:', form)
-  
+  const form = modal.querySelector("form") as HTMLFormElement  
   if(!modal || !form) {
     console.log('Modal oder Form nicht gefunden')
     return

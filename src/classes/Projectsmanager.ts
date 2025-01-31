@@ -42,7 +42,7 @@ export class ProjectsManager {
     
     const project = new Project(data)
 
-    project.ui.addEventListener("click", () => {
+    project.ui.addEventListener("click", () => { // Sobald die UI angecklickt wird, wird der Listener ausgelöst
       console.log("Project clicked:", project.id); // Log project ID
       const projectsPage = document.getElementById("projects-page")
       const detailsPage = document.getElementById("project-details")
@@ -70,6 +70,12 @@ export class ProjectsManager {
     if (!detailsPage) { return }
 
     detailsPage.setAttribute("data-project-id", project.id)
+
+    // Projektfarbe aktualisieren
+    const shortageLogo = detailsPage.querySelector("#projectnameshortage")
+    if (shortageLogo instanceof HTMLElement) {
+        shortageLogo.style.backgroundColor = project.color
+    }
 
     // Für alle verfügbaren Projekt-Keys
     for (const key in project) {
@@ -120,10 +126,12 @@ export class ProjectsManager {
         if (key in project && key !== "id") {
             project[key] = updatedData[key];
         }
+        
     }
-    
+    console.log(updatedData.name)
+        console.log("Projectdaten", project)
     // Update UI
-    project.setUI();
+    project.setUI()    // Neue UI erstellen    
     
     // Update details page if we're on it
     const detailsPage = document.getElementById("project-details")
