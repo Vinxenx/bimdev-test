@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,7 +29,7 @@
           </div>
           <div class="form-field-container">
             <label><span class="material-icons-round">subject</span>Description</label>
-            <textarea name="description" cols="30" rows="5" placeholder="Give your project a nice description! So people is jealous about it."></textarea>
+            <textarea name="description" cols="30" rows="5" placeholder="Give your project a nice description! So people are jealous about it."></textarea>
           </div>
           <div class="form-field-container">
             <label><span class="material-icons-round">person</span>Role</label>
@@ -55,6 +57,39 @@
           <div style="display: flex; margin: 10px 0px 10px auto; column-gap: 10px;">
             <button type="button" id="cancel-btn" style="background-color: transparent;">Cancel</button>
             <button id="submit-btn" type="submit" style="background-color: rgb(18, 145, 18);">Accept</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="new-task-modal">
+      <form id="new-task-form">
+        <h2 id="task-form-title">New Task</h2>
+        <div class="input-list">
+          <div class="form-field-container">
+            <label><span class="material-icons-round">check_box</span>Task</label>
+            <input name="task-name" type="text" placeholder="What do I have to do?">
+            <p style="color: gray; font-size: var(--font-sm); margin-top: 5px; font-style: italic;">TIP: Think in Baby Steps!</p>
+          </div>
+          <div class="form-field-container">
+            <label><span class="material-symbols-outlined">progress_activity</span>
+              Progress
+            </label>
+            <select name="task-progress">
+              <option>Pending</option>
+              <option>Active</option>
+              <option>Finished</option>
+            </select>
+          </div>
+          <div class="form-field-container">
+            <label for="finishDate">
+              <span class="material-symbols-outlined">target</span>
+              Finish Date
+            </label>
+            <input name="task-date" type="date"></input>
+          </div>
+          <div style="display: flex; margin: 10px 0px 10px auto; column-gap: 10px;">
+            <button type="button" id="cancel-task-btn" style="background-color: transparent;">Cancel</button>
+            <button id="submit-task-btn" type="submit" style="background-color: rgb(18, 145, 18);">Accept</button>
           </div>
         </div>
       </form>
@@ -121,17 +156,19 @@
                   <span class="material-icons-round">search</span>
                   <input type="text" placeholder="Search To-Do's by name" style="width: 100%;">
                 </div>
-                <span class="material-icons-round">add</span>
+                <button id = "task-btn"><span class="material-icons-round">add</span></button>
               </div>
             </div>
-            <div style="display: flex; flex-direction: column; padding: 10px 30px; row-gap: 20px;">
-              <div class="todo-item">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div style="display: flex; column-gap: 15px; align-items: center;">
-                    <span class="material-icons-round" style="padding: 10px; background-color: #686868; border-radius: 10px;">construction</span>
-                    <p>Make anything here as you want, even something longer.</p>
+            <div style="display: flex; flex-direction: column; padding: 10px 30px;">
+              <div id="task-list" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="todo-item">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; column-gap: 15px; align-items: center;">
+                      <span class="material-icons-round" style="padding: 10px; background-color: #686868; border-radius: 10px;">construction</span>
+                      <p>Make anything here as you want, even something longer.</p>
+                    </div>
+                    <p style="text-wrap: nowrap; margin-left: 10px;">Fri, 20 sep</p>
                   </div>
-                  <p style="text-wrap: nowrap; margin-left: 10px;">Fri, 20 sep</p>
                 </div>
               </div>
             </div>

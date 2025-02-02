@@ -1,4 +1,5 @@
 import { IProject, Project } from "./Project"
+import { Task, ITask } from "./Task"
 
 export class ProjectsManager {
   list: Project[] = []
@@ -180,6 +181,18 @@ export class ProjectsManager {
             try {
                 console.log("3. Aktuelles Projekt vor newProject:", project); // Prüfen des einzelnen Projekts
                 const newProject = this.newProject(project);
+                
+                const Tasks = newProject.Tasks
+                if (Tasks) {
+                  for (const taskData of Tasks) {
+                      const task = new Task(taskData);
+                      // UI-Element zum task-list Container hinzufügen
+                      const taskContainer = document.getElementById("task-list");
+                      if (taskContainer) {
+                          taskContainer.appendChild(task.ui);
+                      }
+                  }
+              }
                 console.log("4. Erstelltes Projekt:", newProject); // Prüfen was erstellt wurde
             } catch (error) {
                 console.error("5. Fehler beim Erstellen:", error); // Fehler loggen

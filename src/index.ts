@@ -1,5 +1,6 @@
-import { IProject, ProjectStatus, UserRole } from "./classes/Project"
+import { Project, IProject, ProjectStatus, UserRole } from "./classes/Project"
 import { ProjectsManager } from "./classes/Projectsmanager"
+import { ITask, TaskProgress, } from "./classes/Task"
 
 function showModal(id: string) {
   const modal = document.getElementById(id)
@@ -21,6 +22,7 @@ function closeModal(id: string) {
 
 const projectsListUI = document.getElementById("projects-list") as HTMLElement
 const projectsManager = new ProjectsManager(projectsListUI)
+
 
 
 const newProjectBtn = document.getElementById("new-project-btn")
@@ -46,7 +48,6 @@ if (editBtn) {
 } else {
   console.warn("New edit button was not found")
 }
-
 const submitBtn = document.getElementById("submit-btn")
 if(submitBtn) {
   submitBtn.addEventListener("click", () => projectsManager.updateProject)
@@ -95,6 +96,7 @@ if(cancelBtn) {
     closeModal("new-project-modal")
   })
 }
+
 
 
 const exportProjectsBtn= document.getElementById("export-projects-btn")
@@ -186,3 +188,115 @@ function handleProjectModal(mode: 'new' | 'edit', projectId?: string) {
   console.log('Modal wurde geöffnet')
 }
 
+
+
+
+const taskForm = document.getElementById("new-task-form") as HTMLFormElement
+if (taskForm && taskForm instanceof HTMLFormElement) {
+  taskForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(taskForm)
+
+    const detailsPage = document.getElementById("project-details")
+    const projectId = detailsPage?.getAttribute("data-project-id") as string
+    const activeProject = projectsManager.getProject(projectId)
+
+      if(activeProject) {
+        const taskData: ITask = {
+          taskName: formData.get("task-name") as string,
+          taskProgress: formData.get("task-progress") as TaskProgress,
+          taskDate: new Date(formData.get("task-date") as string)
+        }
+       
+        
+
+          // Unterscheide zwischen "new" und "edit"
+      const mode = taskForm.getAttribute("data-mode");
+      if (mode === "edit") {
+        const taskId = taskForm.getAttribute("taskId");
+        if (!taskId) {
+          console.error("Task ID fehlt im Edit-Modus");
+          return;
+        }
+        activeProject.updateTask(taskId, taskData);
+      } else {
+        // Neuen Task erstellen, wenn im "new"-Modus
+        activeProject.newTask(taskData);
+      }
+
+        taskForm.reset()
+        closeModal("new-task-modal")
+      }
+  })
+}
+
+//cancel button schließt das modal
+const canceltaskBtn = document.getElementById("cancel-task-btn")
+if(canceltaskBtn) {
+  
+  canceltaskBtn.addEventListener("click", () => {
+    taskForm?.reset()
+    closeModal("new-task-modal")
+  })
+}
+
+
+const taskBtn = document.getElementById("task-btn")
+if (taskBtn)  {
+  const modal = document.getElementById("new-task-modal") as HTMLDialogElement
+  taskBtn.addEventListener("click", () => {
+    handleTaskModal('new')
+    })
+} else {
+  console.warn("New task button was not found")
+}
+
+
+
+export function handleTaskModal(mode: 'new' | 'edit', taskId?: String ) {
+  const modal = document.getElementById("new-task-modal") as HTMLDialogElement
+  const form = document.getElementById("new-task-form") as HTMLFormElement
+
+  const modalTitle = document.getElementById("task-form-title") as HTMLElement
+  console.log(modalTitle)
+  if(modalTitle) {
+    modalTitle.textContent = mode === 'new' ? "New Task" : "Edit Task"
+  }
+  const submitBtn = document.getElementById("submit-task-btn")
+  if(submitBtn) {
+    submitBtn.textContent = mode === 'new' ? "Create" : "Update"
+  }
+
+  // Setze den Modus im Formular
+  form.setAttribute('data-mode', mode)
+
+  if(mode ==='edit' && taskId) {
+    form.setAttribute('data-mode', "edit")
+    form.setAttribute("taskId", taskId as string)
+
+    const nameInput = form.querySelector('input[name="task-name"]') as HTMLInputElement
+    const progressSelect = form.querySelector('select[name="task-progress"]') as HTMLSelectElement
+    const dateInput = form.querySelector('input[name="task-date"]') as HTMLInputElement
+
+    // Hole den Task aus dem aktiven Projekt
+    const projectElement = document.querySelector("#project-details") as HTMLElement;
+    const projectId = projectElement.dataset.projectId as string;
+    const project = projectsManager.getProject(projectId)
+    const task = project?.getTask(taskId as string)
+
+    if(task) {
+      nameInput.value = task.taskName 
+      progressSelect.value = task.taskProgress
+      dateInput.value = task.taskDate.toISOString().split('T')[0]  
+    }
+    
+  }
+ 
+  modal.showModal()
+}
+
+const submitTaskBtn = document.getElementById("submit-task-btn")
+if(submitTaskBtn) {
+  submitTaskBtn.addEventListener("click", () => projectsManager.updateProject)
+}
